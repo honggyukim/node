@@ -516,6 +516,11 @@ parser.add_option('--enable-asan',
     dest='enable_asan',
     help='build with asan')
 
+parser.add_option('--enable-finstrument',
+    action='store_true',
+    dest='enable_finstrument',
+    help='build with finstrument-functions')
+
 parser.add_option('--enable-static',
     action='store_true',
     dest='enable_static',
@@ -1005,6 +1010,7 @@ def configure_node(o):
     o['variables']['library_files'] = options.linked_module
 
   o['variables']['asan'] = int(options.enable_asan or 0)
+  o['variables']['finstrument'] = int(options.enable_finstrument or 0)
 
   if options.use_xcode and options.use_ninja:
     raise Exception('--xcode and --ninja cannot be used together.')

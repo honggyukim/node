@@ -1,6 +1,7 @@
 {
   'variables': {
     'asan%': 0,
+    'finstrument%': 0,                # Turn on -finstrument-functions build
     'werror': '',                     # Turn off -Werror in V8 build.
     'visibility%': 'hidden',          # V8's visibility setting
     'target_arch%': 'ia32',           # set v8's target architecture
@@ -298,6 +299,14 @@
             'xcode_settings': {'OTHER_LDFLAGS': ['-fsanitize=address']},
           }],
         ],
+      }],
+      ['finstrument == 1 and OS != "mac"', {
+        'cflags+': [
+          '-fno-omit-frame-pointer',
+          '-finstrument-functions',
+        ],
+        'cflags!': [ '-fomit-frame-pointer' ],
+        'ldflags': [ '-finstrument-functions' ],
       }],
       ['OS == "win"', {
         'msvs_cygwin_shell': 0, # prevent actions from trying to use cygwin

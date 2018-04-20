@@ -1415,6 +1415,8 @@
         '../src/trap-handler/trap-handler-internal.h',
         '../src/type-hints.cc',
         '../src/type-hints.h',
+        '../src/uftrace-jit.cc',
+        '../src/uftrace-jit.h',
         '../src/unicode-inl.h',
         '../src/unicode.cc',
         '../src/unicode.h',

@@ -1066,6 +1066,9 @@ void BytecodeGenerator::GenerateBytecodeBody() {
   // Emit tracing call if requested to do so.
   if (FLAG_trace) builder()->CallRuntime(Runtime::kTraceEnter);
 
+  // Emit tracing call for uftrace if requested to do so.
+  if (FLAG_uftrace) builder()->CallRuntime(Runtime::kUftraceEnter);
+
   // Emit type profile call.
   if (info()->collect_type_profile()) {
     feedback_spec()->AddTypeProfileSlot();
@@ -2513,6 +2516,13 @@ void BytecodeGenerator::BuildReturn(int source_position) {
     // Runtime returns {result} value, preserving accumulator.
     builder()->StoreAccumulatorInRegister(result).CallRuntime(
         Runtime::kTraceExit, result);
+  }
+  if (FLAG_uftrace) {
+    RegisterAllocationScope register_scope(this);
+    Register result = register_allocator()->NewRegister();
+    // Runtime returns {result} value, preserving accumulator.
+    builder()->StoreAccumulatorInRegister(result).CallRuntime(
+        Runtime::kUftraceExit, result);
   }
   if (info()->collect_type_profile()) {
     builder()->CollectTypeProfile(info()->literal()->return_position());

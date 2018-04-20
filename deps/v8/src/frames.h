@@ -775,6 +775,8 @@ class JavaScriptFrame : public StandardFrame {
   static void PrintTop(Isolate* isolate, FILE* file, bool print_args,
                        bool print_line_number);
 
+  static Address GetTopAddress(Isolate* isolate);
+
   static void CollectFunctionAndOffsetForICStats(JSFunction* function,
                                                  AbstractCode* code,
                                                  int code_offset);

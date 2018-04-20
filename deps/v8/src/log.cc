@@ -29,6 +29,7 @@
 #include "src/source-position-table.h"
 #include "src/string-stream.h"
 #include "src/tracing/tracing-category-observer.h"
+#include "src/uftrace-jit.h"
 #include "src/unicode-inl.h"
 #include "src/vm-state-inl.h"
 #include "src/wasm/wasm-code-manager.h"
@@ -1956,6 +1957,14 @@ bool Logger::SetUp(Isolate* isolate) {
   PrepareLogFileName(log_file_name, isolate, FLAG_logfile);
   log_ = new Log(this, log_file_name.str().c_str());
 
+  if (FLAG_uftrace) {
+    // --always-opt is on until I find the way to get unique address from
+    // interpreter.
+    FLAG_always_opt = true;
+    uftrace_jit_logger_ = new UftraceJitLogger(isolate);
+    AddCodeEventListener(uftrace_jit_logger_);
+  }
+
   if (FLAG_perf_basic_prof) {
     perf_basic_logger_ = new PerfBasicLogger(isolate);
     AddCodeEventListener(perf_basic_logger_);
@@ -2016,6 +2025,10 @@ sampler::Sampler* Logger::sampler() {
   return ticker_;
 }
 
+UftraceJitLogger* Logger::uftrace_jit_logger() {
+  return uftrace_jit_logger_;
+}
+
 void Logger::StopProfilerThread() {
   if (profiler_ != nullptr) {
     profiler_->Disengage();
@@ -2033,6 +2046,12 @@ FILE* Logger::TearDown() {
 
   delete ticker_;
   ticker_ = nullptr;
+
+  if (uftrace_jit_logger_) {
+    RemoveCodeEventListener(uftrace_jit_logger_);
+    delete uftrace_jit_logger_;
+    uftrace_jit_logger_ = nullptr;
+  }
 
   if (perf_basic_logger_) {
     RemoveCodeEventListener(perf_basic_logger_);

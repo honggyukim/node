@@ -1291,6 +1291,8 @@ DEFINE_BOOL(ll_prof, false, "Enable low-level linux profiler.")
 DEFINE_BOOL(interpreted_frames_native_stack, false,
             "Show interpreted frames on the native stack (useful for external "
             "profilers).")
+DEFINE_BOOL(uftrace, false,
+            "Enable uftrace linux profiler for JIT code.")
 DEFINE_BOOL(perf_basic_prof, false,
             "Enable perf linux profiler (basic support).")
 DEFINE_NEG_IMPLICATION(perf_basic_prof, compact_code_space)

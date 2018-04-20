@@ -175,6 +175,8 @@ bool Linkage::NeedsFrameStateInput(Runtime::FunctionId function) {
     case Runtime::kToFastProperties:  // TODO(conradw): Is it safe?
     case Runtime::kTraceEnter:
     case Runtime::kTraceExit:
+    case Runtime::kUftraceEnter:
+    case Runtime::kUftraceExit:
       return false;
 
     // Some inline intrinsics are also safe to call without a FrameState.

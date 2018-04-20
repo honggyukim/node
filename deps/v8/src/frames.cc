@@ -1169,6 +1169,30 @@ void JavaScriptFrame::PrintTop(Isolate* isolate, FILE* file, bool print_args,
   }
 }
 
+Address JavaScriptFrame::GetTopAddress(Isolate* isolate)
+{
+  JavaScriptFrameIterator it(isolate);
+  Address addr = 0;
+  while (!it.done()) {
+    if (it.frame()->is_java_script()) {
+      JavaScriptFrame* frame = it.frame();
+      if (frame->is_interpreted()) {
+        //InterpretedFrame* iframe = reinterpret_cast<InterpretedFrame*>(frame);
+        //addr = iframe->GetExpressionAddress();
+        addr = reinterpret_cast<Address>(0xdeadbeefLU);   // FIXME
+        //code_offset = iframe->GetBytecodeOffset();
+      } else {
+        Code* code = frame->unchecked_code();
+        //code_offset = static_cast<int>(frame->pc() - code->InstructionStart());
+        addr = code->InstructionStart();
+      }
+      break;
+    }
+    it.Advance();
+  }
+  return addr;
+}
+
 void JavaScriptFrame::CollectFunctionAndOffsetForICStats(JSFunction* function,
                                                          AbstractCode* code,
                                                          int code_offset) {

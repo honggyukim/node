@@ -18,6 +18,7 @@
 #include "src/runtime-profiler.h"
 #include "src/snapshot/natives.h"
 #include "src/trap-handler/trap-handler.h"
+#include "src/uftrace-jit.h"
 #include "src/wasm/memory-tracing.h"
 #include "src/wasm/module-compiler.h"
 #include "src/wasm/wasm-engine.h"
@@ -753,6 +754,43 @@ RUNTIME_FUNCTION(Runtime_TraceExit) {
   PrintF("} -> ");
   obj->ShortPrint();
   PrintF("\n");
+  return obj;  // return TOS
+}
+
+RUNTIME_FUNCTION(Runtime_UftraceEnter) {
+  SealHandleScope shs(isolate);
+  DCHECK_EQ(0, args.length());
+  FILE* fp = isolate->logger()->uftrace_jit_logger()->uftrace_data_handle();
+  int n = StackSize(isolate);
+  Address addr = JavaScriptFrame::GetTopAddress(isolate);
+  UftraceJitLogger::uftrace_record rec = {
+    .time = UftraceJitLogger::mcount_gettime(),
+    .type = UftraceJitLogger::UFTRACE_ENTRY,
+    .more = 0,
+    .magic = RECORD_MAGIC,
+    .depth = (uint64_t)n,
+    .addr = (uint64_t)addr,
+  };
+  fwrite(&rec, sizeof(rec), 1, fp);
+  return ReadOnlyRoots(isolate).undefined_value();
+}
+
+RUNTIME_FUNCTION(Runtime_UftraceExit) {
+  SealHandleScope shs(isolate);
+  DCHECK_EQ(1, args.length());
+  CONVERT_ARG_CHECKED(Object, obj, 0);
+  FILE* fp = isolate->logger()->uftrace_jit_logger()->uftrace_data_handle();
+  int n = StackSize(isolate);
+  Address addr = JavaScriptFrame::GetTopAddress(isolate);
+  UftraceJitLogger::uftrace_record rec = {
+    .time = UftraceJitLogger::mcount_gettime(),
+    .type = UftraceJitLogger::UFTRACE_EXIT,
+    .more = 0,
+    .magic = RECORD_MAGIC,
+    .depth = (uint64_t)n,
+    .addr = (uint64_t)addr,
+  };
+  fwrite(&rec, sizeof(rec), 1, fp);
   return obj;  // return TOS
 }
 

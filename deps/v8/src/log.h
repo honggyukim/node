@@ -69,6 +69,7 @@ class Isolate;
 class JitLogger;
 class Log;
 class LowLevelLogger;
+class UftraceJitLogger;
 class PerfBasicLogger;
 class PerfJitLogger;
 class Profiler;
@@ -143,6 +144,8 @@ class Logger : public CodeEventListener {
                            JitCodeEventHandler event_handler);
 
   sampler::Sampler* sampler();
+
+  UftraceJitLogger* uftrace_jit_logger();
 
   void StopProfilerThread();
 
@@ -358,6 +361,7 @@ class Logger : public CodeEventListener {
 
   bool is_logging_;
   Log* log_;
+  UftraceJitLogger* uftrace_jit_logger_;
   PerfBasicLogger* perf_basic_logger_;
   PerfJitLogger* perf_jit_logger_;
   LowLevelLogger* ll_logger_;

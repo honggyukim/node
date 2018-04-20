@@ -1449,6 +1449,8 @@
         '../src/turbo-assembler.h',
         '../src/type-hints.cc',
         '../src/type-hints.h',
+        '../src/uftrace-jit.cc',
+        '../src/uftrace-jit.h',
         '../src/unicode-cache-inl.h',
         '../src/unicode-cache.h',
         '../src/unicode-decoder.cc',

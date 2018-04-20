@@ -541,6 +541,8 @@ namespace internal {
   F(SystemBreak, 0, 1)                        \
   F(TraceEnter, 0, 1)                         \
   F(TraceExit, 1, 1)                          \
+  F(UftraceEnter, 0, 1)                       \
+  F(UftraceExit, 1, 1)                        \
   F(UnblockConcurrentRecompilation, 0, 1)     \
   F(WasmGetNumberOfInstances, 1, 1)           \
   F(WasmNumInterpretedCalls, 1, 1)            \

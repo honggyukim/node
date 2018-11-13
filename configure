@@ -512,6 +512,11 @@ parser.add_option('--enable-asan',
     dest='enable_asan',
     help='build with asan')
 
+parser.add_option('--enable-pg',
+    action='store_true',
+    dest='enable_pg',
+    help='build with -pg')
+
 parser.add_option('--enable-static',
     action='store_true',
     dest='enable_static',
@@ -982,6 +987,8 @@ def configure_node(o):
 
   if options.use_xcode and options.use_ninja:
     raise Exception('--xcode and --ninja cannot be used together.')
+
+  o['variables']['pg'] = int(options.enable_pg or 0)
 
   if options.coverage:
     o['variables']['coverage'] = 'true'

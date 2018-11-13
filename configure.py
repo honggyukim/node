@@ -523,6 +523,11 @@ parser.add_option('--enable-asan',
     dest='enable_asan',
     help='build with asan')
 
+parser.add_option('--enable-pg',
+    action='store_true',
+    dest='enable_pg',
+    help='build with -pg')
+
 parser.add_option('--enable-static',
     action='store_true',
     dest='enable_static',
@@ -1098,6 +1103,7 @@ def configure_node(o):
     o['variables']['library_files'] = options.linked_module
 
   o['variables']['asan'] = int(options.enable_asan or 0)
+  o['variables']['pg'] = int(options.enable_pg or 0)
 
   if options.coverage:
     o['variables']['coverage'] = 'true'
